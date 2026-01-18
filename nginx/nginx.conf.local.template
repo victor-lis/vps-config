@@ -3,28 +3,15 @@ events {
 }
 
 http {
-    # Configurações recomendadas para performance e tipos de arquivo
     include       /etc/nginx/mime.types;
     default_type  application/octet-stream;
     sendfile        on;
     keepalive_timeout  65;
 
-    ### Evolution Nginx Configuration ###
-
+    ### Evolution Nginx Configuration (Local) ###
     server {
         listen 80;
-        server_name ${EVO_DOMAIN};
-
-        # Redireciona HTTP para HTTPS
-        return 301 https://$host$request_uri;
-    }
-
-    server {
-        listen 443 ssl;
-        server_name ${EVO_DOMAIN};
-
-        ssl_certificate /etc/letsencrypt/live/${EVO_DOMAIN}/fullchain.pem;
-        ssl_certificate_key /etc/letsencrypt/live/${EVO_DOMAIN}/privkey.pem;
+        server_name ${EVO_DOMAIN}; # evo.localhost
 
         proxy_http_version 1.1;
         proxy_cache_bypass $http_upgrade;
@@ -55,25 +42,12 @@ http {
             proxy_set_header Authorization $http_authorization;
         }
 
-        location /.well-known/acme-challenge/ {
-            root /var/www/certbot;
-        }
     }
 
-    ### Portainer Nginx Configuration ###
-
+    ### Portainer Nginx Configuration (Local) ###
     server {
         listen 80;
-        server_name ${PORTAINER_DOMAIN};
-        return 301 https://$host$request_uri;
-    }
-
-    server {
-        listen 443 ssl;
-        server_name ${PORTAINER_DOMAIN};
-
-        ssl_certificate /etc/letsencrypt/live/${CERT_DOMAIN}/fullchain.pem;
-        ssl_certificate_key /etc/letsencrypt/live/${CERT_DOMAIN}/privkey.pem;
+        server_name ${PORTAINER_DOMAIN}; # portainer.localhost
 
         location / {
             proxy_pass http://portainer:9000;
@@ -84,27 +58,11 @@ http {
         }
     }
 
-    ### N8N Nginx Configuration ###
-
+    ### N8N Nginx Configuration (Local) ###
     server {
         listen 80;
-        server_name ${N8N_DOMAIN};
-        return 301 https://$host$request_uri;
-    }
-
-    server {
-        listen 443 ssl;
-        server_name ${N8N_DOMAIN};
-
-        ssl_certificate /etc/letsencrypt/live/${CERT_DOMAIN}/fullchain.pem;
-        ssl_certificate_key /etc/letsencrypt/live/${CERT_DOMAIN}/privkey.pem;
-
-        add_header X-Content-Type-Options "nosniff";
-        add_header X-Frame-Options "SAMEORIGIN";
-        add_header Referrer-Policy "strict-origin-when-cross-origin";
-        add_header Content-Security-Policy "default-src 'self' https: data: 'unsafe-inline' 'unsafe-eval'";
-        add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload";
-
+        server_name ${N8N_DOMAIN}; # n8n.localhost
+        
         location / {
             proxy_http_version 1.1;
             proxy_cache_bypass $http_upgrade;
@@ -119,28 +77,17 @@ http {
         }
     }
 
-    ### Portfolio Nginx Configuration ###
-
+    ### Portfolio Nginx Configuration (Local) ###
     server {
         listen 80;
-        server_name ${PORTFOLIO_DOMAIN};
-        return 301 https://$host$request_uri;
-    }
-
-    server {
-        listen 443 ssl;
-        server_name ${PORTFOLIO_DOMAIN};
-
-        ssl_certificate /etc/letsencrypt/live/${CERT_DOMAIN}/fullchain.pem;
-        ssl_certificate_key /etc/letsencrypt/live/${CERT_DOMAIN}/privkey.pem;
+        server_name ${PORTFOLIO_DOMAIN}; # localhost
 
         location / {
-            proxy_pass ${PORTFOLIO_PASS};
+            proxy_pass ${PORTFOLIO_PASS}; # http://localhost:1234
             proxy_set_header Host $host;
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
             proxy_set_header X-Forwarded-Proto $scheme;
         }
     }
-
 }
