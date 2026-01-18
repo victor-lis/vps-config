@@ -21,7 +21,7 @@ Repositório com templates e configurações para subir serviços úteis em um V
 
 - 🔌 MQTT (Mosquitto) — [`docker-compose.yml:services.mqtt`](docker-compose.yml)  
   - Configuração: [mqtt/config/mosquitto.conf](mqtt/config/mosquitto.conf)  
-  - Senhas: [mqtt/config/passwd](mqtt/config/passwd)  
+  - Variáveis (Usuários): veja [mqtt/.env.example](mqtt/.env.example) (Gerado dinamicamente no boot)
   - Volumes: `./mqtt/config`, `./mqtt/data`, `./mqtt/log`
 
 - 🧭 Portainer — [`docker-compose.yml:services.portainer`](docker-compose.yml)  
@@ -43,7 +43,8 @@ Repositório com templates e configurações para subir serviços úteis em um V
 - [`docker-compose.yml`](docker-compose.yml) — orquestração dos serviços  
 - [`.gitignore`](.gitignore) — evita comitar dados/senhas (ex.: `*.env`, `*/data`, `*/log`)  
 - [`.github/workflows/restart.yaml`](.github/workflows/restart.yaml) — workflow para atualizar/reiniciar remoto via SSH  
-- Exemplos de variáveis: [postgres/.env.example](postgres/.env.example), [n8n/.env.example](n8n/.env.example), [evolution/.env.example](evolution/.env.example)
+- [`.github/workflows/restart.yaml`](.github/workflows/restart.yaml) — workflow para atualizar/reiniciar remoto via SSH  
+- Exemplos de variáveis: [postgres/.env.example](postgres/.env.example), [n8n/.env.example](n8n/.env.example), [evolution/.env.example](evolution/.env.example), [mqtt/.env.example](mqtt/.env.example)
 
 ---
 
@@ -67,7 +68,9 @@ cd vps-config
 ```bash
 cp postgres/.env.example postgres/.env
 cp n8n/.env.example n8n/.env
+cp n8n/.env.example n8n/.env
 cp evolution/.env.example evolution/.env
+cp mqtt/.env.example mqtt/.env
 # ajustar senhas e chaves antes de subir
 ```
 
