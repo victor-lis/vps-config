@@ -27,12 +27,17 @@ services:
     image: eclipse-mosquitto:latest
     container_name: mqtt
     restart: unless-stopped
+    entrypoint: ["/bin/sh", "/docker-entrypoint.sh"]
+    command: ["/usr/sbin/mosquitto", "-c", "/mosquitto/config/mosquitto.conf"]
     volumes:
       - ./mqtt/config:/mosquitto/config
       - ./mqtt/data:/mosquitto/data
       - ./mqtt/log:/mosquitto/log
+      - ./mqtt/docker-entrypoint.sh:/docker-entrypoint.sh
     ports:
       - "1883:1883" # Mantida - Porta TCP pura, não é HTTP.
+    env_file:
+      - ./mqtt/.env
     networks:
       - local-network
 
